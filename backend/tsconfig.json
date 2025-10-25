@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "hono/jsx",
+		"lib": ["ESNext"],
+
+		"paths": {
+			"@/*": ["./src/*"],
+			"@lib/*": ["./src/lib/*"],
+			"@routes/*": ["./src/routes/*"],
+			"@utils/*": ["./src/lib/utils/*"]
+		}
+	}
+}
