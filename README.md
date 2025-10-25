@@ -15,6 +15,35 @@ docker compose up --detach --build
 - This spins up the Postgres DB and the backend service defined in `docker-compose.yaml`.
 - The backend listens on port `3001` by default (or `PORT` if overridden).
 
++-+-+-+-+-+
+
+### Open the database in your browser (db:studio)
+
+Run the Studio web UI from the backend folder to inspect the database:
+
+- From your host, at the repo root:
+  ```bash
+  cd backend
+  npm run db:studio
+  ```
+- The command will start a local web UI and print an access URL (open that URL in your browser). Use Ctrl+C to stop.
+
+If the backend is running in Docker you can start Studio inside the container instead:
+
+```bash
+# If your container name is `backend-prod`
+docker container exec -it backend-prod sh -c "npm run db:studio"
+
+# Or with Compose (service name `backend`)
+docker compose exec backend sh -c "npm run db:studio"
+```
+
+Notes:
+- Ensure the environment used by Studio (DATABASE_URL or container networking) points to your Postgres instance so you can inspect real data.
+- Studio typically binds to localhost; open the printed URL in your browser to view the database UI.
+
++-+-+-+-+-+
+
 ## View Better Auth API docs
 
 If you want to open the Better Auth auto-generated docs from inside the running backend container, run:
