@@ -2,9 +2,8 @@ FROM oven/bun:1.3.1-alpine
 
 WORKDIR /app
 
-# Accept build argument for DATABASE_URL
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# Provide dummy DATABASE_URL for generate (doesn't actually connect)
+ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 
 # Install dependencies
 COPY package.json bun.lock ./
@@ -20,5 +19,4 @@ RUN bun db:generate
 EXPOSE 3001
 
 # Start the app in production mode
-# CMD ["bun", "prod"]
 CMD ["./start.sh"]
