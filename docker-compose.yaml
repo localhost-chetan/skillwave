@@ -21,8 +21,6 @@ services:
         build:
             context: ./backend/
             dockerfile: Dockerfile.prod
-            args:
-                - DATABASE_URL=postgresql://postgres:password@postgres:5432/skillwave
         container_name: backend-prod
         restart: on-failure
         environment:
@@ -31,7 +29,6 @@ services:
             - ./backend/.env.local
         ports:
             - "3001:3001"
-            - "4983:4983"
         depends_on:
             postgres:
                 condition: service_healthy
