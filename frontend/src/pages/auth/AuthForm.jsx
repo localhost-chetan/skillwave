@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Mail, Lock, Phone, User } from "lucide-react";
 import { SchoolCombobox } from "@/components/common/SchoolCombobox";
-import { OTPDialog } from "@/components/common/OTPDialog";
 import { ValidationErrorDialog } from "@/components/common/ValidationErrorDialog";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import ImageUpload from "@/components/common/ImageUpload";
@@ -16,6 +15,9 @@ import { loginSchema, signupSchema, registerSchoolSchema } from "@/hooks/validat
 import { signup, sendOtp } from "@/redux/slices/authSlice";
 import { useToast } from "@/hooks/use-toast";
 import ErrorBoundaryWithToast from "@/components/common/ErrorBoundaryWithToast";
+import ResetPasswordDialog from "@/components/common/ResetPasswordDialog";
+import NewPasswordDialog from "@/components/common/NewPasswordDialog";
+import { OTPDialog } from "@/components/common/OTPDialog";
 
 const AuthForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +26,8 @@ const AuthForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [validationErrors, setValidationErrors] = useState([]);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
+  const [showNewPasswordDialog, setShowNewPasswordDialog] = useState(false);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -64,8 +68,8 @@ const AuthForm = () => {
 
   const handleSignup = async (data) => {
     try {
-    //   await dispatch(signup(data)).unwrap();
-    //   await dispatch(sendOtp(data.phoneNumber)).unwrap();
+      // await dispatch(signup(data)).unwrap();
+      // await dispatch(sendOtp(data.phoneNumber)).unwrap();
       setPhoneNumber(data.phoneNumber);
       setShowOTPDialog(true);
       toast.success("Success", { description: "OTP sent to your phone!" });
@@ -76,8 +80,8 @@ const AuthForm = () => {
 
   const handleRegisterSchool = async (data) => {
     try {
-    //   await dispatch(signup(data)).unwrap();
-    //   await dispatch(sendOtp(data.phoneNumber)).unwrap();
+      // await dispatch(signup(data)).unwrap();
+      // await dispatch(sendOtp(data.phoneNumber)).unwrap();
       setPhoneNumber(data.phoneNumber);
       setShowOTPDialog(true);
       toast.success("Success", { description: "OTP sent for school registration!" });
@@ -145,6 +149,15 @@ const AuthForm = () => {
                   <Button type="submit" className="w-full h-11 font-medium mt-6">
                     Login
                   </Button>
+                  <div className="text-center">
+                <button
+                  type="button"
+                  className="text-sm text-primary hover:underline"
+                  onClick={() => setShowResetDialog(true)}
+                >
+                  Reset Password
+                </button>
+              </div>
                 </form>
               </TabsContent>
 
@@ -319,6 +332,17 @@ const AuthForm = () => {
       </div>
       <OTPDialog open={showOTPDialog} onOpenChange={setShowOTPDialog} phoneNumber={phoneNumber} />
       <ValidationErrorDialog open={showErrorDialog} onOpenChange={setShowErrorDialog} errors={validationErrors} />
+    <ResetPasswordDialog
+        open={showResetDialog}
+        setOpen={setShowResetDialog}
+        setPhoneNumber={setPhoneNumber}
+        setShowOTPDialog={setShowOTPDialog}
+      />
+      <NewPasswordDialog
+        open={showNewPasswordDialog}
+        setOpen={setShowNewPasswordDialog}
+        phoneNumber={phoneNumber}
+      />
     </>
   );
 };

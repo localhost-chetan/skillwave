@@ -1,20 +1,13 @@
-// src/services/authService.js
+import axios from "../utils/axiosInstance";
 
-export const loginService = async (formData) => {
-  // Example API call
-  const res = await fetch("https://example.com/api/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  });
-  return res.json();
+export const registerUser = async (data) => {
+  return axios.post("/auth/register", data);
 };
 
-export const signupService = async (formData) => {
-  const res = await fetch("https://example.com/api/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  });
-  return res.json();
+export const loginUser = async (data) => {
+  return axios.post("/auth/login", data);
+};
+
+export const logoutUser = async () => {
+  return axios.post("/auth/logout");
 };

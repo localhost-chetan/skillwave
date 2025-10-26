@@ -1,40 +1,95 @@
-import { searchSchool, signupSchool, sendOtp, verifyOtp } from "@/api/school";
+import { API_URL, SCHOOL_API_URL } from "@/hooks/constants";
+import axiosInstance from "./axiosInstance";
 
-export const searchSchoolService = async (query) => {
-  if (query.length < 3) {
-    return { success: false, error: "School name must be at least 3 characters" };
-  }
+export const registerSchool = async (data) => {
   try {
-    const data = await searchSchool(query);
-    return { success: true, data: data.data || [] };
+    if (!data) throw new Error("Data is missing");
+    const response = await axiosInstance.post("/signup", data);
+    return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response?.data?.errorDetails?.details || "Search failed" };
+    console.log("registerSchool error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to register school",
+    };
   }
 };
 
-export const signupService = async (formData) => {
+
+export const searchSchoolByName = async (query) => {
   try {
-    const data = await signupSchool(formData);
-    return { success: true, data };
+    if (!query) throw new Error("Query is missing");
+     const response = await axiosInstance.get(`${SCHOOL_API_URL}/search-school/by-keyword`, {
+    params: { schoolName: query },
+  });
+    return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response?.data?.message || "Signup failed" };
+    console.log("searchSchoolService error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to search schools",
+    };
   }
 };
 
-export const sendOtpService = async (phone) => {
+
+export const sendOtpToSchool = async (phone) => {
   try {
-    const data = await sendOtp(phone);
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error.response?.data?.message || "OTP send failed" };
+  const response = await axiosInstance.post(`${API_URL}/send-otp`, { phone });
+  return { success: true, data: response.data };
+  }
+  catch (error) {
+    return {
+      success: false,
+      error: error.message, 
+    };
   }
 };
 
-export const verifyOtpService = async (phone, otp) => {
+
+export const verifyOtpForSchool = async (phone, otp) => {
   try {
-    const data = await verifyOtp(phone, otp);
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error.response?.data?.message || "OTP verification failed" };
+  const response = await axiosInstance.post(`${API_URL}/verify-otp`, { phone, otp });
+  return { success: true, data: response.data };
+  }
+  catch (error) {
+    return {
+      success: false,
+      error: error.message, 
+    };
   }
 };
+
+export const resetPassword = async ({ phoneNumber, otp, newPassword }) => {
+  try {
+    if (!phoneNumber || !otp || !newPassword) throw new Error("Missing required fields");
+    const response = await axiosInstance.post("/reset-password", {
+      phoneNumber,
+      otp,
+      newPassword,
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log("resetPassword error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to reset password",
+    };
+  }
+};
+
+
+export const sendResetOtp = async (phoneNumber) => {
+  try {
+    if (!phoneNumber) throw new Error("Phone number is missing");
+    const response = await axiosInstance.post("/send-reset-otp", { phoneNumber });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log("sendResetOtp error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to send reset OTP",
+    };
+  }
+};
+

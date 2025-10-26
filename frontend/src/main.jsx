@@ -5,13 +5,15 @@ import App from './App.jsx';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.js'; 
 import { Toaster } from './components/ui/toaster';
+import ErrorBoundaryWithToast from './components/common/ErrorBoundaryWithToast';
 
 createRoot(document.getElementById('root')).render(
    <StrictMode>
     
     <Provider store={store}>
       <App />
-      <Toaster/>
+      <ErrorBoundaryWithToast><Toaster/></ErrorBoundaryWithToast>
+      
     </Provider>
   </StrictMode>
 );

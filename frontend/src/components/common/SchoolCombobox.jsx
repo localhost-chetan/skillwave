@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, ChevronsUpDown, Building2 } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,22 +15,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useDebounce } from "@/hooks/useDebounce";
-import { searchSchoolService } from "@/services/schoolService";
+import { searchSchoolByName } from "@/services/schoolService";
 import { useToast } from "@/hooks/use-toast";
 
 export const SchoolCombobox = ({ value, onChange }) => {
   const [open, setOpen] = useState(false);
   const [schools, setSchools] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("abc");
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchSchools = async () => {
       if (debouncedSearchQuery.length >= 3) {
-        const result = await searchSchoolService(debouncedSearchQuery);
-        if (result.success) {
-          setSchools(result.data.map((school) => school.schoolName));
+        const result = await searchSchoolByName(debouncedSearchQuery);console.log(result)
+        if (result) {
+          console.log(result)
+          setSchools(result.data.data.map((school) => school.schoolName));
         } else {
           toast.error("Error", { description: result.error });
           setSchools([]);
