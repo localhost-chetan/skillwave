@@ -1,13 +1,49 @@
-export const validateForm = (form) => {
-  const errors = {};
+import * as z from "zod";
 
-  if (!form.fullName) errors.fullName = "Full name is required";
-  if (!form.email || !/\S+@\S+\.\S+/.test(form.email)) errors.email = "Valid email is required";
-  if (!form.password || form.password.length < 6) errors.password = "Password must be at least 6 characters";
-  if (form.password !== form.confirmPassword) errors.confirmPassword = "Passwords do not match";
-  if (!form.phoneNumber || !/^\d{10}$/.test(form.phoneNumber)) errors.phoneNumber = "Valid 10-digit phone number is required";
-  if (!form.schoolName) errors.schoolName = "School name is required";
-  if (!form.schoolLogo) errors.schoolLogo = "School logo is required";
+export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
-  return errors;
-};
+export const signupSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain an uppercase letter")
+    .regex(/[a-z]/, "Password must contain a lowercase letter")
+    .regex(/[0-9]/, "Password must contain a number"),
+  confirmPassword: z.string(),
+  phoneNumber: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .regex(/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/, "Invalid phone number format"),
+  school: z.string().min(1, "Please select a school"),
+  profilePhoto: z.any().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+export const registerSchoolSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain an uppercase letter")
+    .regex(/[a-z]/, "Password must contain a lowercase letter")
+    .regex(/[0-9]/, "Password must contain a number"),
+  confirmPassword: z.string(),
+  phoneNumber: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .regex(/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/, "Invalid phone number format"),
+  school: z.string().min(1, "Please select a school"),
+  profilePhoto: z.any().optional(),
+  schoolLogo: z.any().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});

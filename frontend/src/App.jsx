@@ -1,8 +1,7 @@
-// import AppRoutes from "@/routes/AppRoutes";
-import Signup from "./pages/auth/Signup";
+import AuthForm from "./pages/auth/AuthForm";
 
 function App() {
-  return <Signup />;
+  return <AuthForm />;
 }
 
 export default App;

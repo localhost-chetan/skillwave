@@ -1,18 +1,14 @@
 import { searchSchool, signupSchool, sendOtp, verifyOtp } from "@/api/school";
 
 export const searchSchoolService = async (query) => {
+  if (query.length < 3) {
+    return { success: false, error: "School name must be at least 3 characters" };
+  }
   try {
-    // Only call API if query is 3+ characters
-    if (query.length < 3) {
-      return { success: false, error: "Please enter at least 3 characters to search" };
-    }
     const data = await searchSchool(query);
-    if (!data.status) {
-      return { success: false, error: data.errorDetails?.details || "Search failed" };
-    }
-    return { success: true, data: data.data };
+    return { success: true, data: data.data || [] };
   } catch (error) {
-    return { success: false, error: error.message || "Search failed" };
+    return { success: false, error: error.response?.data?.errorDetails?.details || "Search failed" };
   }
 };
 
@@ -21,7 +17,7 @@ export const signupService = async (formData) => {
     const data = await signupSchool(formData);
     return { success: true, data };
   } catch (error) {
-    return { success: false, error: error.message || "Signup failed" };
+    return { success: false, error: error.response?.data?.message || "Signup failed" };
   }
 };
 
@@ -30,7 +26,7 @@ export const sendOtpService = async (phone) => {
     const data = await sendOtp(phone);
     return { success: true, data };
   } catch (error) {
-    return { success: false, error: error.message || "OTP send failed" };
+    return { success: false, error: error.response?.data?.message || "OTP send failed" };
   }
 };
 
@@ -39,6 +35,6 @@ export const verifyOtpService = async (phone, otp) => {
     const data = await verifyOtp(phone, otp);
     return { success: true, data };
   } catch (error) {
-    return { success: false, error: error.message || "OTP verification failed" };
+    return { success: false, error: error.response?.data?.message || "OTP verification failed" };
   }
 };

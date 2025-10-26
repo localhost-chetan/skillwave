@@ -16,7 +16,6 @@ export const signupSchool = async (data) => {
 };
 
 export const sendOtp = async (phone) => {
-  // Placeholder for OTP API
   const response = await axios.post(`${API_URL}/send-otp`, { phone });
   return response.data;
 };

@@ -1,0 +1,1 @@
+export const API_URL = "https://kys.udiseplus.gov.in/webapp/api";
